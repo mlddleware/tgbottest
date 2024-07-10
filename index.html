@@ -74,6 +74,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Тень текста кнопки */
         }
         .button:hover {
             background: linear-gradient(to bottom, #FFEC8B, #FFA500);
@@ -91,6 +92,7 @@
             display: none;
             -webkit-background-clip: text; /* Необходимо для поддержки градиента в тексте в Safari */
             background-clip: text;
+             text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Тень текста кнопки */
             background-image: linear-gradient(to bottom, #FFA500, #FFEC8B);
             font-family: 'Molot', Arial, sans-serif; /* Использование шрифта Molot только для результата */
         }
@@ -102,7 +104,7 @@
     </div>
     <div class="container">
         <div class="spinner"></div>
-        <button class="button" onclick="throwCoin()">Бросить</button>
+        <button class="button" onclick="throwCoin()">БРОСИТЬ</button>
         <div class="result" id="result"></div>
     </div>
 
@@ -133,7 +135,7 @@
             animation.onfinish = function() {
                 // Показываем результат
                 result.textContent = outcome;
-                result.style.color = '#FFA500'; // Делаем текст видимым
+                result.style.color = '#e4e4e4'; // Делаем текст видимым
                 result.style.display = 'block';
             };
         }
