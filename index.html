@@ -22,10 +22,12 @@
             width: 100%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
         .spinner {
+            position: relative;
             width: 100px;
             height: 100px;
             background: url('money.png') no-repeat center center;
@@ -36,36 +38,72 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .marquee-container {
-            position: absolute;
-            top: 0px;
-            width: 390px;
-            height: 58px;
-            background-color: rgba(0, 0, 0, 0.7);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-        }
-        .marquee {
-            display: inline-block;
-            white-space: nowrap;
-            padding-left: 100%;
-            animation: marquee 5s linear infinite;
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
             color: white;
-            font-size: 24px;
+            background: linear-gradient(to bottom, #FFA500, #FFEC8B);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-        @keyframes marquee {
-            from { transform: translateX(100%); }
-            to { transform: translateX(-100%); }
+        .button:hover {
+            background: linear-gradient(to bottom, #FFEC8B, #FFA500);
+        }
+        .button:active {
+            background: #FFA500;
+        }
+        .result {
+            position: absolute;
+            top: calc(50% - 120px); /* половина высоты шрифта для выравнивания по центру */
+            left: calc(50% - 50px); /* половина ширины текста */
+            font-size: 37px;
+            font-weight: bold;
+            color: #FFA500;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="marquee-container">
-        <div class="marquee">GORILLA KAZIK</div>
-    </div>
     <div class="container">
         <div class="spinner"></div>
+        <button class="button" onclick="throwCoin()">Бросить</button>
+        <div class="result" id="result"></div>
     </div>
+
+    <script>
+        function throwCoin() {
+            var coin = document.querySelector('.spinner');
+            var result = document.getElementById('result');
+
+            // Очищаем предыдущий результат
+            result.textContent = '';
+
+            // Определяем случайным образом "ОРЁЛ" или "РЕШКА"
+            var outcomes = ['ОРЁЛ', 'РЕШКА'];
+            var randomIndex = Math.floor(Math.random() * outcomes.length);
+            var outcome = outcomes[randomIndex];
+
+            // Анимация кручения монеты
+            var animation = coin.animate([
+                { transform: 'rotate(0deg) translateY(0px)' },
+                { transform: 'rotate(0deg) translateY(-150px)' },
+                { transform: 'rotate(0deg) translateY(0px)' }
+            ], {
+                duration: 1000,
+                easing: 'ease-in-out'
+            });
+
+            // По окончании анимации
+            animation.onfinish = function() {
+                // Показываем результат
+                result.textContent = outcome;
+                result.style.display = 'block';
+            };
+        }
+    </script>
 </body>
 </html>
