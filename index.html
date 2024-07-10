@@ -1,144 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Веб приложение для Телеграм бота</title>
     <style>
-        /* Загрузка шрифта Molot */
         @font-face {
-            font-family: 'Molot';
-            src: url('Molot.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
+            font-family: 'HomeVideo';
+            src: url('HomeVideo-Regular.otf') format('opentype');
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif; /* Использование системного шрифта для основного текста */
-            background: url('pole1.jpg') no-repeat center center fixed;
-            background-size: cover;
-            position: relative; /* Добавлено для позиционирования элемента .top-bar */
-        }
-        .top-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px; /* Высота черного полупрозрачного поля */
-            background-color: rgba(0, 0, 0, 0.7); /* Черный цвет с прозрачностью 70% */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .container {
-            position: relative;
-            width: 100%;
-            height: 100%;
+        body {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-top: 60px; /* Отступ для контента под .top-bar */
+            height: 100vh;
+            background-color: #f0f0f0;
+            background-image: url('moon.png');
+            background-size: cover;
+            background-position: center center;
+            margin: 0;
+            font-family: 'HomeVideo', Arial, sans-serif; /* Используем шрифт HomeVideo */
         }
-        .spinner {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            background: url('money.png') no-repeat center center;
-            background-size: contain;
-            animation: spin 5s linear infinite;
+        .main-square {
+            width: 220px;
+            height: 220px;
+            background-color: #0A101E;
+            border-radius: 15px;
+            box-shadow: 0 0 10px 5px #B4750A;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 6px; /* Увеличено расстояние между квадратами */
+            padding: 10px; /* Увеличена внутренняя отступ */
+            box-sizing: border-box;
+            margin-bottom: 20px; /* Отступ для кнопки */
+            position: relative; /* Позиционирование для абсолютного элемента */
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .inner-square {
+            width: 100%;
+            height: 100%;
+            background-color: #238FA9;
+            border-radius: 5px;
         }
-        .button {
-            margin-top: 20px;
+        .star {
+            width: 100%;
+            height: 100%;
+            background-image: url('star.png');
+            background-size: cover;
+            border-radius: 5px;
+            opacity: 0; /* Начально скрыто */
+            transition: opacity 0.5s ease-in-out; /* Плавность перехода */
+        }
+        .animate-out {
+            animation: fadeOut 0.5s ease-in-out forwards; /* Анимация исчезновения */
+        }
+        .animate-in {
+            animation: fadeIn 0.5s ease-in-out forwards; /* Анимация появления */
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* Отступ для кнопки */
+        }
+        .slider {
+            margin: 0 10px;
+        }
+        button {
             padding: 10px 20px;
             font-size: 16px;
-            font-weight: bold;
+            background-color: #238FA9;
             color: white;
-            background: linear-gradient(to bottom, #FFA500, #FFEC8B);
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Тень текста кнопки */
-        }
-        .button:hover {
-            background: linear-gradient(to bottom, #FFEC8B, #FFA500);
-        }
-        .button:active {
-            background: #FFA500;
-        }
-        .result {
-            position: absolute;
-            top: calc(50% - 125px); /* половина высоты шрифта для выравнивания по центру */
-            left: calc(50% - 50px); /* половина ширины текста */
-            font-size: 35px;
-            font-weight: bold;
-            color: transparent; /* Делаем текст прозрачным */
-            display: none;
-            -webkit-background-clip: text; /* Необходимо для поддержки градиента в тексте в Safari */
-            background-clip: text;
-             text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Тень текста кнопки */
-            background-image: linear-gradient(to bottom, #FFA500, #FFEC8B);
-            font-family: 'Molot', Arial, sans-serif; /* Использование шрифта Molot только для результата */
+            margin-top: 20px; /* Дополнительный отступ */
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        GORILLA KAZIK
+    <div>
+        <h1 style="font-size: 24px; margin-bottom: 10px;">GORILLA KAZIK</h1>
     </div>
-    <div class="container">
-        <div class="spinner"></div>
-        <button class="button" onclick="throwCoin()">БРОСИТЬ</button>
-        <div class="result" id="result"></div>
+
+    <div class="main-square" id="mainSquare">
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
+        <div class="inner-square"></div>
     </div>
+    
+    <div>
+        <p>КОЛ-ВО ЛОВУШЕК</p>
+        <div class="slider-container">
+            <input type="range" min="1" max="7" step="2" value="1" class="slider" id="trapSlider" oninput="updateTrapCount()">
+            <span id="trapCount">1</span>
+        </div>
+    </div>
+    
+    <button onclick="replaceSquares()">ПОЛУЧИТЬ<br>СИГНАЛ</button>
 
     <script>
-        function throwCoin() {
-            var coin = document.querySelector('.spinner');
-            var result = document.getElementById('result');
+        let initialSquaresHTML; // Для хранения начального состояния квадратов
+        let animating = false; // Флаг, указывающий на выполнение анимации
 
-            // Очищаем предыдущий результат
-            result.textContent = '';
-
-            // Определяем случайным образом "ОРЁЛ" или "РЕШКА"
-            var outcomes = ['ОРЁЛ', 'РЕШКА'];
-            var randomIndex = Math.floor(Math.random() * outcomes.length);
-            var outcome = outcomes[randomIndex];
-
-            // Анимация кручения монеты
-            var animation = coin.animate([
-                { transform: 'rotate(0deg) translateY(0px)' },
-                { transform: 'rotate(0deg) translateY(-150px)' },
-                { transform: 'rotate(0deg) translateY(0px)' }
-            ], {
-                duration: 1000,
-                easing: 'ease-in-out'
-            });
-
-            // По окончании анимации
-            animation.onfinish = function() {
-                // Показываем результат
-                result.textContent = outcome;
-                result.style.color = '#e4e4e4'; // Делаем текст видимым
-                result.style.display = 'block';
-            };
+        function updateTrapCount() {
+            const trapSlider = document.getElementById('trapSlider');
+            const trapCount = document.getElementById('trapCount');
+            trapCount.textContent = trapSlider.value;
         }
+
+        function replaceSquares() {
+            if (animating) return; // Проверяем, выполняется ли анимация
+            animating = true; // Устанавливаем флаг, что анимация началась
+
+            const trapSlider = document.getElementById('trapSlider').value;
+            const squares = document.querySelectorAll('.inner-square');
+            const animateClass = trapSlider === '1' ? 'animate-out' : 'animate-in'; // Определяем класс анимации
+
+            if (squares.length === 0) {
+                animating = false; // Сбрасываем флаг, если нет квадратов
+                return;
+            }
+
+            let count;
+            if (trapSlider === '1') {
+                count = 10;
+            } else if (trapSlider === '3') {
+                count = 5;
+            } else if (trapSlider === '5') {
+                count = 4;
+            } else if (trapSlider === '7') {
+                count = 3;
+            }
+
+            if (!initialSquaresHTML) {
+                initialSquaresHTML = document.getElementById('mainSquare').innerHTML; // Сохраняем начальное состояние квадратов
+            }
+
+            // Вызываем resetSquares перед заменой квадратов
+            resetSquares();
+
+            const randomIndices = getRandomIndices(squares.length, count);
+
+            randomIndices.forEach((index, i) => {
+                const square = squares[index];
+                setTimeout(() => {
+                    square.classList.add(animateClass);
+                    setTimeout(() => {
+                        const star = document.createElement('div');
+                        star.classList.add('star', 'animate-in');
+                        square.replaceWith(star);
+                        if (i === randomIndices.length - 1) {
+                            animating = false; // Сбрасываем флаг после завершения анимации
+                        }
+                    }, 0); // Задержка перед появлением star.png
+                }, i * 1000); // Задержка перед исчезновением квадрата
+            });
+        }
+
+        function resetSquares() {
+            const mainSquare = document.getElementById('mainSquare');
+            const stars = mainSquare.querySelectorAll('.star');
+            stars.forEach(star => {
+                const square = document.createElement('div');
+                square.classList.add('inner-square');
+                star.replaceWith(square);
+            });
+        }
+
+        function getRandomIndices(max, count) {
+            const indices = [];
+            while (indices.length < count) {
+                const randomIndex = Math.floor(Math.random() * max);
+                if (!indices.includes(randomIndex)) {
+                    indices.push(randomIndex);
+                }
+            }
+            return indices;
+        }
+
+        document.getElementById('trapSlider').addEventListener('input', updateTrapCount);
     </script>
 </body>
 </html>
